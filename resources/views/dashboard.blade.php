@@ -128,7 +128,7 @@
 </head>
 <body>
   <!-- Sidebar -->
-  <aside class="sidebar">
+  <!-- <aside class="sidebar">
     <div>
       <h1>CatatYuk</h1>
       <nav class="menu">
@@ -142,9 +142,10 @@
       <p><small>Logged in as</small></p>
       <strong>{{ Auth::user()->name ?? 'User' }}</strong>
     </div>
-  </aside>
+  </aside> -->
 
   <!-- Main -->
+   <!-- @include('components.sidebar') -->
   <div class="main">
     <header class="topbar">
       <h1>Dashboard</h1>
