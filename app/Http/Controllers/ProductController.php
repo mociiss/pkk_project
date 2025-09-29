@@ -13,11 +13,12 @@ class ProductController extends Controller
     }
 
     public function create(){
+        $produk = Product::orderBy('nama_produk')->get();
         return view('produk.create', compact('produk'));
     }
 
     public function store(Request $request){
-        $request = validate([
+        $request->validate([
             'nama_produk' => 'required',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2848',
             'harga' => 'required|numeric',
@@ -28,16 +29,17 @@ class ProductController extends Controller
         if($request->hasFile('gambar')){
             $file = $request->file('gambar');
             $filename = time() . '_' . $file->getClientOriginalName();
-            file->move(public_path('Gambar'), $filename);
+            $file->move(public_path('images'), $filename);
             $data['gambar'] = $filename;
         }
 
-        Produk::create($data);
+        Product::create($data);
 
         return redirect()->route('produk.index')->with('success','Produk berhasil ditambahkan!');
     }
 
-    public function edit(){
+    public function edit($id){
+        $produk = Product::findOrFail($id);
         return view('produk.edit', compact('produk'));
     }
 
@@ -70,7 +72,7 @@ class ProductController extends Controller
     }
 
     public function destroy($id){
-        $produk = Produk::findOrfail($id);
+        $produk = Product::findOrfail($id);
 
         if($produk->gambar && file_exists(public_path('Gambar/'. $produk->gambar))){
                 unlink(public_path('images/' . $produk->gambar));

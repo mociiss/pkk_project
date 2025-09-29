@@ -142,10 +142,10 @@
       <p><small>Logged in as</small></p>
       <strong>{{ Auth::user()->name ?? 'User' }}</strong>
     </div>
-  </aside> -->
+  </aside> 
 
-  <!-- Main -->
-   <!-- @include('components.sidebar') -->
+  <-- Main -->
+@include('components.sidebar')
   <div class="main">
     <header class="topbar">
       <h1>Dashboard</h1>
@@ -155,18 +155,18 @@
       </form>
     </header>
 
-    <div class="content">
+    <!-- <div class="content"> -->
       <!-- Order Line -->
-      <section class="order-line">
+      <!-- <section class="order-line">
         <h3>Order Line</h3>
         <div class="tabs">
           <div class="tab active">All</div>
           <div class="tab">New</div>
           <div class="tab">Processing</div>
           <div class="tab">Done</div>
-        </div>
+        </div> -->
 
-        <h3>Menu</h3>
+        <!-- <h3>Menu</h3>
         <div class="menu-grid">
           <div class="menu-card">
             <img src="https://via.placeholder.com/100" alt="">
@@ -186,8 +186,8 @@
         </div>
       </section>
 
-      <!-- Right Panel -->
-      <aside class="right-panel">
+      <-- Right Panel -->
+      <!-- <aside class="right-panel">
         <h3>Table #04</h3>
         <p>2 People</p>
 
@@ -200,4 +200,4 @@
         <div class="summary">
           <h4>Payment Summary</h4>
           <p><span>Subtotal</span> <span>Rp 35.000</span></p>
-          <p><span>Discount</
+          <p><span>Discount</ --> 

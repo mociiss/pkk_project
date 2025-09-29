@@ -102,7 +102,7 @@
                 <td>{{ $p->nama_produk }}</td>
                 <td>
                     @if ($p->gambar)
-                    <img src="{{ asset('Gambar/' . $item->gambar) }}" alt="Gambar Barang" width="50">
+                    <img src="{{ asset('images/' . $p->gambar) }}" alt="Gambar Barang" width="50">
                     @endif
                 </td>
                 <td>Rp {{ number_format($p->harga, 0, ',', '.') }}</td>
