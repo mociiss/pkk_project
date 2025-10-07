@@ -17,7 +17,7 @@ class KaryawanController extends Controller
         return view('karyawan.create' , compact('karyawan'));
     }
 
-    public function store(Request $request, $id){
+    public function store(Request $request){
         $request->validate([
             'nama' => 'required',
             'jenis_kelamin' => 'required',
@@ -45,7 +45,7 @@ class KaryawanController extends Controller
             'no_telp' => 'required'
         ]);
 
-        Karyawan::update($request->all());
+        $karyawan->update($request->all());
 
         return redirect()->route('karyawan.index')->with('success', 'Data Karyawan berhasil di update!');
     }

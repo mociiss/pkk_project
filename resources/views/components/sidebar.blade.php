@@ -39,6 +39,8 @@
   <nav class="menu">
     <a href="{{ route('dashboard') }}" class="menu-item {{ request()->is('dashboard') ? 'active' : '' }}">Dashboard</a>
     <a href="{{ route('produk.index') }}" class="menu-item {{ request()->is('produk*') ? 'active' : '' }}">Produk</a>
+    <a href="{{ route('karyawan.index') }}" class="menu-item {{ request()->is('karyawan*') ? 'active' : '' }}">Pegawai</a>
+    <a href="{{ route('pelanggan.index') }}" class="menu-item {{ request()->is('pelanggan*') ? 'active' : '' }}">Pelanggan</a>
     <a href="#" class="menu-item">Laporan</a>
   </nav>
 
