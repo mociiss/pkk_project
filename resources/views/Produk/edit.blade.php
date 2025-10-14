@@ -82,7 +82,7 @@
 <div class="container">
     <div class="form-wrapper">
         <h1>Edit Produk</h1>
-        <form action="{{ route('produk.update', $produk) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('produk.update', $produk->id) }}" method="POST" enctype="multipart/form-data">
             @csrf @method('PUT')
 
             {{-- Nama Produk --}}
@@ -100,22 +100,33 @@
                 <input type="file" name="gambar">
             </div>
 
-            {{-- Harga --}}
             <div class="form-group">
                 <label>Harga (Rp)</label>
                 <input type="number" name="harga" value="{{ $produk->harga }}" required>
             </div>
 
-            {{-- Deskripsi --}}
             <div class="form-group">
                 <label>Deskripsi</label>
                 <textarea name="deskripsi" rows="4" required>{{ $produk->deskripsi }}</textarea>
             </div>
 
-            {{-- Tombol --}}
+            <div>
+                <label for="">Stok</label>
+                <input type="number" name="stok" value="{{ $produk->stok }}" required>
+            </div>
+
+            <div>
+            <label for="">Kategori</label>
+            <select name="kategori_id" id="" required>
+                @foreach($kategori as $k)
+                <option value="{{ $k->id }}">{{ $k->nama_kategori }}</option>
+                @endforeach
+            </select>
+        </div>
+
             <div class="btn-group">
-                <a href="{{ route('produk.index') }}" class="btn btn-secondary">⬅️ Kembali</a>
-                <button type="submit" class="btn btn-success">💾 Update Produk</button>
+                <a href="{{ route('produk.index') }}" class="btn btn-secondary">Kembali</a>
+                <button type="submit" class="btn btn-success">Update Produk</button>
             </div>
         </form>
     </div>

@@ -31,7 +31,7 @@ class PelangganController extends Controller
 
     public function edit($id){
         $pelanggan = Pelanggan::findOrFail($id);
-        return view('pelanggan.edit', redirect('pelanggan'));
+        return view('pelanggan.edit', compact('pelanggan'));
     }
 
     public function update(Request $request, $id){

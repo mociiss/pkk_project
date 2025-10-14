@@ -81,43 +81,42 @@
 </style>
 
 <div class="container">
-    <h1>Daftar Produk</h1>
-    <a href="{{ route('produk.create') }}" class="btn-add">+ Tambah Produk</a>
+    <h1>Data Transaksi</h1>
+    <a href="{{ route('transaksi.create') }}" class="btn-add">+ Tambah Data Transaksi</a>
 
     <table>
         <thead>
             <tr>
                 <th>No</th>
-                <th>Nama</th>
-                <th>Gambar</th>
-                <th>Harga</th>
-                <th>Deskripsi</th>
-                <th>Stok</th>
+                <th>Tanggal</th>
+                <th>Detail Barang</th>
+                <th>Total</th>
                 <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
-        @foreach ($produk as $index => $p)
+        @foreach ($transaksi as $index => $t)
             <tr>
                 <td>{{ $index + 1 }}</td>
-                <td>{{ $p->nama_produk }}</td>
+                <td>{{ $t->tanggal }}</td>
                 <td>
-                    @if ($p->gambar)
-                    <img src="{{ asset('images/' . $p->gambar) }}" alt="Gambar Barang" width="50">
-                    @endif
-                </td>
-                <td>Rp {{ number_format($p->harga, 0, ',', '.') }}</td>
-                <td>{{ $p->deskripsi }}</td>
-                <td>{{ $p->stok }}</td>
+                    <ul>
+                    @foreach($t->detail as $td)
+                    <li>
+                        {{ $td->produk->nama_produk }}
+                        ({{ $td->jumlah }} x Rp {{ number_format($td->harga, 0,',','.') }}) :
+                        <b>Rp {{ number_format($td->subtotal, 0,',','.') }}</b>
+                        
+                    </li>
+                    @endforeach
+                    <td>Rp {{ number_format($t->total,0,',','.') }}</td>
+</ul>
+</td>
                 <td>
-                    <a href="{{ route('produk.edit', $p) }}" class="btn-edit">Edit</a>
-                    <form action="{{ route('produk.destroy', $p) }}" method="POST" style="display:inline">
-                        @csrf @method('DELETE')
-                        <button type="submit" class="btn-delete" onclick="return confirm('Yakin hapus?')">Hapus</button>
-                    </form>
+                    <a href="{{ route('transaksi.cetak', $td->id) }}" class="btn-cetak" target="_blank">Cetak Struk</a>
                 </td>
             </tr>
-        @endforeach
+            @endforeach
         </tbody>
     </table>
 </div>

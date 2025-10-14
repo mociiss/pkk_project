@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Kategori;
 
 class ProductController extends Controller
 {
@@ -14,7 +15,8 @@ class ProductController extends Controller
 
     public function create(){
         $produk = Product::orderBy('nama_produk')->get();
-        return view('produk.create', compact('produk'));
+        $kategori = Kategori::orderBy('nama_kategori')->get();
+        return view('produk.create', compact('kategori', 'produk'));
     }
 
     public function store(Request $request){
@@ -22,7 +24,9 @@ class ProductController extends Controller
             'nama_produk' => 'required',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2848',
             'harga' => 'required|numeric',
-            'deskripsi' => 'nullable|string'
+            'deskripsi' => 'nullable|string',
+            'stok' => 'required|integer|min:0',
+            'kategori_id' => 'required|exists:kategori,id'
         ]);
 
         $data = $request->except('gambar');
@@ -40,7 +44,8 @@ class ProductController extends Controller
 
     public function edit($id){
         $produk = Product::findOrFail($id);
-        return view('produk.edit', compact('produk'));
+        $kategori = Kategori::orderBy('nama_kategori')->get();
+        return view('produk.edit', compact('produk','kategori'));
     }
 
     public function update(Request $request, $id){
@@ -50,13 +55,15 @@ class ProductController extends Controller
             'nama_produk' => 'required',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2848',
             'harga' => 'required|numeric',
-            'deskripsi' => 'nullable|string'
+            'deskripsi' => 'nullable|string',
+            'stok' => 'required',
+            'kategori_id' => 'required|exists:kategori,id'
         ]);
 
         $data = $request->except('gambar');
 
         if($request->hasFile('gambar')){
-            if($produk->gambar && file_exists(public_path('Gambar/'. $produk->gambar))){
+            if($produk->gambar && file_exists(public_path('images/'. $produk->gambar))){
                 unlink(public_path('images/' . $produk->gambar));
             }
 

@@ -9,6 +9,8 @@ class transaksi extends Model
     protected $table = 'transaksi';
 
     protected $fillable = [
+        'karyawan_id',
+        'pelanggan_id',
         'tanggal',
         'total'
     ];

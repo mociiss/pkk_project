@@ -65,6 +65,19 @@
             <label>Deskripsi</label>
             <textarea name="deskripsi" class="form-control"></textarea>
         </div>
+        <div>
+            <label for="">Stok</label>
+            <input type="number" name="stok" class="form-control" required>
+        </div>
+        <div>
+            <label for="">Kategori</label>
+            <select name="kategori_id" id="" required>
+                <option value="">-- Pilih Kategori --</option>
+                @foreach($kategori as $k)
+                <option value="{{ $k->id }}">{{ $k->nama_kategori }}</option>
+                @endforeach
+            </select>
+        </div>
         <button type="submit" class="btn btn-success">Simpan</button>
     </form>
 </div>
