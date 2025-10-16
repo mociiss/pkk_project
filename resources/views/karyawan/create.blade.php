@@ -28,16 +28,31 @@
         padding: 10px;
         margin-bottom: 15px;
         border: 1px solid #ced4da;
+        width: -webkit-fill-available;
     }
 
     .custom-form .btn-success {
         width: 100%;
         padding: 10px;
+        margin-top: 15px;
         font-size: 16px;
+        color: white;
         font-weight: bold;
         border-radius: 5px;
         background-color: #28a745;
         border: none;
+    }
+
+    .btn-back {
+        background: #28a745;
+        color: #fff;
+        padding: 10px 220px;
+        border: none;
+        font-weight: bold;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 14px;
+        transition: background 0.3s;
     }
 
     .custom-form .btn-success:hover {
@@ -55,7 +70,7 @@
         </div>
         <div>
             <label>Jenis Kelamin</label>
-            <select name="jenis_kelamin" required>
+            <select name="jenis_kelamin" class="form-control" required>
                 <option value="">-- Pilih Jenis Kelamin --</option>
                 <option value="Laki-laki" {{ old('jenis_kelamin') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
                 <option value="Perempuan" {{ old('jenis_kelamin') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
@@ -69,7 +84,7 @@
             <label>No Telepon</label>
             <input type="number" name="no_telp" class="form-control">
         </div>
-        <a href="{{ route('karyawan.index') }}" class="btn btn-secondary">Kembali</a>
+        <a href="{{ route('karyawan.index') }}" class="btn-back">Kembali</a>
         <button type="submit" class="btn btn-success">Simpan</button>
     </form>
 </div>

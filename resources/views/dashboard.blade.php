@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard Penjualan Kue')
+@section('title', 'CatatYuk - Meryta Cookies')
 
 @section('content')
 <style>
@@ -77,7 +77,7 @@
 </style>
 
     <div class="card">
-        <h3>Aktivitas Penjualan Kue</h3>
+        <h3>Aktivitas Penjualan Kue - Meryta Cookies</h3>
         <div class="highlight">Rp {{ number_format($totalPenjualan ?? 0, 0, ',', '.') }}</div>
         <p style="color:#795548;">Total pendapatan dari seluruh penjualan.</p>
 

@@ -3,6 +3,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,500;1,500&family=Licorice&family=Rowdies:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
+  .sidebar-container{
+    display: fixed;
+  }
     .sidebar {
       width: 240px;
       height: 100vh;
@@ -43,10 +46,12 @@
     }
 </style>
   </head>
+  <div class="sidebar-container">
 <aside class="sidebar" id="sidebar">
   <div class="brand">
     <a href="{{ route('dashboard') }}">CatatYuk</a>
   </div>
+
 
   <nav class="menu">
     <a href="{{ route('dashboard') }}" class="menu-item {{ request()->is('dashboard') ? 'active' : '' }}">Dashboard</a>
@@ -61,3 +66,4 @@
     <div class="user-name">{{ Auth::user()->name }}</div>
   </div>
 </aside>
+  </div>

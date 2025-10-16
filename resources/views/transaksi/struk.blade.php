@@ -17,7 +17,9 @@
         <h3>CatatYuk</h3> 
         <p>Meryta Cookies</p> 
         <p>Tanggal: {{ $transaksi->tanggal }}</p>
-        <p>Kasir : </p> 
+        @foreach($users as $k)
+        <p>Kasir : {{ $k->name }}</p> 
+        @endforeach
         <div class="line"></div> 
     </div> 
  

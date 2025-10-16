@@ -40,7 +40,7 @@
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     table thead {
-        background: #007bff;
+        background: #8C623B;
         color: #fff;
     }
     table th, table td {

@@ -69,7 +69,7 @@ class ProductController extends Controller
 
             $file = $request->file('gambar');
             $filename = time() . '_' . $file->getClientOriginalName();
-            file->move(public_path('Gambar'), $filename);
+            $file->move(public_path('images'), $filename);
             $data['gambar'] = $filename;
         }
 

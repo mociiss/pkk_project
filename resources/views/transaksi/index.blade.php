@@ -113,7 +113,7 @@
 </ul>
 </td>
                 <td>
-                    <a href="{{ route('transaksi.cetak', $td->id) }}" class="btn-cetak" target="_blank">Cetak Struk</a>
+                    <a href="{{ route('transaksi.cetak', $t->id) }}" class="btn-cetak" target="_blank">Cetak Struk</a>
                 </td>
             </tr>
             @endforeach

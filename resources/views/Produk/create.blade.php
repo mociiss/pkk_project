@@ -1,7 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,500;1,500&family=Licorice&family=Rowdies:wght@300;400;700&display=swap" rel="stylesheet">
+
 <style>
+    
     .custom-container {
         background-color: #f8f9fa;
         padding: 30px;
@@ -9,6 +14,7 @@
         max-width: 600px;
         margin: 30px auto;
         box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        font-family: "Karla", sans-serif;
     }
 
     .custom-container h1 {
@@ -28,20 +34,41 @@
         padding: 10px;
         margin-bottom: 15px;
         border: 1px solid #ced4da;
+        width: -webkit-fill-available;
     }
 
-    .custom-form .btn-success {
-        width: 100%;
+    .container-button .btn-success {
+        width: 50%;
         padding: 10px;
         font-size: 16px;
-        font-weight: bold;
         border-radius: 5px;
-        background-color: #28a745;
+        background-color: #885621ff;
+        font-family: "Karla", sans-serif;
         border: none;
+        color: white;
     }
 
-    .custom-form .btn-success:hover {
-        background-color: #218838;
+    .container-button .btn-success:hover {
+        background-color: #885621ff;
+    }
+
+    .container-button{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .container-button a{
+        display: block;
+        width: 50%;
+        color: white;
+        padding: 10px;
+        text-align: center;
+        font-family: "Karla", sans-serif;
+        border-radius: 5px;
+        font-size: 16px;
+        text-decoration: none;
+        margin-bottom: 10px;
+        background: #885621ff;
     }
 </style>
 
@@ -71,14 +98,17 @@
         </div>
         <div>
             <label for="">Kategori</label>
-            <select name="kategori_id" id="" required>
+            <select name="kategori_id" id="" class="form-control" required>
                 <option value="">-- Pilih Kategori --</option>
                 @foreach($kategori as $k)
                 <option value="{{ $k->id }}">{{ $k->nama_kategori }}</option>
                 @endforeach
             </select>
         </div>
+        <div class="container-button">
         <button type="submit" class="btn btn-success">Simpan</button>
+        <a href="{{ route('produk.index') }}">Kembali</a>
+        </div>
     </form>
 </div>
 @endsection
