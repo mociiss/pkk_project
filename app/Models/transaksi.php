@@ -12,10 +12,20 @@ class transaksi extends Model
         'karyawan_id',
         'pelanggan_id',
         'tanggal',
+        'tanggal_pengiriman',
+        'waktu_pengiriman',
         'total'
     ];
 
     public function detail(){
         return $this->hasMany(TransaksiDetail::class, 'transaksi_id');
+    }
+
+    public function karyawan(){
+        return $this->belongsTo(Karyawan::class, 'karyawan_id');
+    }
+
+    public function pelanggan(){
+        return $this->belongsTo(Pelanggan::class, 'pelanggan_id');
     }
 }

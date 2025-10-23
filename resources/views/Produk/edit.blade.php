@@ -1,136 +1,146 @@
 @extends('layouts.app')
 
 @section('content')
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Karla:wght@400;600&family=Pacifico&display=swap" rel="stylesheet">
+
 <style>
-    .container {
-        display: flex;
-        justify-content: center;
-        padding: 30px;
-    }
-    .form-wrapper {
-        width: 100%;
-        max-width: 600px;
-        background: #fff;
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-    .form-wrapper h1 {
-        margin-bottom: 20px;
-        font-size: 24px;
-        color: #333;
-        text-align: center;
-    }
-    .form-group {
-        margin-bottom: 15px;
-    }
-    .form-group label {
-        display: block;
-        margin-bottom: 6px;
+  body {
+      background-color: #fff8f1;
+      font-family: "Karla", sans-serif;
+  }
+
+  .custom-container {
+      background-color: #fffdfa;
+      padding: 35px;
+      border-radius: 20px;
+      max-width: 650px;
+      margin: 40px auto;
+      box-shadow: 0 6px 20px rgba(139, 90, 43, 0.15);
+      border: 1px solid #f0e4d7;
+  }
+
+  /* Judul */
+  .custom-container h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #6b3e18;
+      font-family: "Pacifico", cursive;
+      font-size: 36px;
+      letter-spacing: 1px;
+  }
+
+    .custom-form label {
         font-weight: 600;
-        color: #444;
-    }
-    .form-group input, 
-    .form-group textarea {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        outline: none;
-        transition: border-color 0.3s;
-        font-size: 14px;
-    }
-    .form-group input:focus, 
-    .form-group textarea:focus {
-        border-color: #007bff;
-    }
-    .preview-img {
+        color: #5c3c1d;
+        margin-bottom: 8px;
         display: block;
-        margin-bottom: 10px;
-        border-radius: 6px;
-    }
-    .btn-group {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 20px;
-    }
-    .btn {
-        padding: 10px 18px;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: 600;
-        text-align: center;
-        cursor: pointer;
-        transition: background 0.3s;
-    }
-    .btn-secondary {
-        background: #6c757d;
-        color: white;
-    }
-    .btn-secondary:hover {
-        background: #5a6268;
-    }
-    .btn-success {
-        background: #28a745;
-        color: white;
-        border: none;
-    }
-    .btn-success:hover {
-        background: #218838;
-    }
+  }
+
+  .custom-form .form-control {
+      border-radius: 10px;
+      padding: 10px 15px;
+      margin-bottom: 18px;
+      border: 1.5px solid #d5bfa3;
+      width: 100%;
+      background-color: #fffaf4;
+      transition: all 0.3s ease;
+  }
+
+  .custom-form .form-control:focus {
+      border-color: #c27a3f;
+      box-shadow: 0 0 6px rgba(194, 122, 63, 0.3);
+      outline: none;
+  }
+
+  .container-button {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 20px;
+  }
+
+  .container-button .btn-success,
+  .container-button a {
+      flex: 1;
+      text-align: center;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      font-family: "Karla", sans-serif;
+      transition: all 0.3s ease;
+  }
+
+  .container-button .btn-success {
+      background-color: #b46a2b;
+      color: #fffdfa;
+  }
+
+  .container-button .btn-success:hover {
+      background-color: #d47f3d;
+      transform: translateY(-2px);
+  }
+
+  .container-button a {
+      background-color: #e5c8a8;
+      color: #5a3a1b;
+  }
+
+  .container-button a:hover {
+      background-color: #f1d3b0;
+      transform: translateY(-2px);
+  }
+
+  .custom-container {
+      animation: fadeIn 0.6s ease;
+  }
+
+  @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+  }
 </style>
-<div class="container">
-    <div class="form-wrapper">
-        <h1>Edit Produk</h1>
-        <form action="{{ route('produk.update', $produk->id) }}" method="POST" enctype="multipart/form-data">
-            @csrf @method('PUT')
 
-            {{-- Nama Produk --}}
-            <div class="form-group">
-                <label>Nama Produk</label>
-                <input type="text" name="nama_produk" value="{{ $produk->nama_produk }}" required>
-            </div>
-
-            {{-- Gambar --}}
-            <div class="form-group">
-                <label>Gambar Produk</label><br>
-                @if ($produk->gambar)
-                    <img src="{{ asset('storage/'.$produk->gambar) }}" width="120" class="preview-img"><br>
-                @endif
-                <input type="file" name="gambar">
-            </div>
-
-            <div class="form-group">
-                <label>Harga (Rp)</label>
-                <input type="number" name="harga" value="{{ $produk->harga }}" required>
-            </div>
-
-            <div class="form-group">
-                <label>Deskripsi</label>
-                <textarea name="deskripsi" rows="4" required>{{ $produk->deskripsi }}</textarea>
-            </div>
-
-            <div>
-                <label for="">Stok</label>
-                <input type="number" name="stok" value="{{ $produk->stok }}" required>
-            </div>
-
-            <div>
-            <label for="">Kategori</label>
-            <select name="kategori_id" id="" required>
+<div class="custom-container">
+    <h1>Tambah Produk</h1>
+    <form action="{{ route('produk.store', $produk->id) }}" method="POST" enctype="multipart/form-data" class="custom-form">
+        @csrf
+        <div>
+            <label>Nama Produk</label>
+            <input type="text" name="nama_produk" class="form-control" value="{{ $produk->nama_produk }}" required>
+        </div>
+        <div>
+            <label>Gambar</label>
+            @if ($produk->gambar)
+                <img src="{{ asset('storage/'.$produk->gambar) }}" width="120" class="preview-img"><br>
+            @endif
+            <input type="file" name="gambar" class="form-control">
+        </div>
+        <div>
+            <label>Harga (Rp)</label>
+            <input type="number" name="harga" value="{{ $produk->harga }}" class="form-control" required>
+        </div> 
+        <div>
+            <label>Stok</label>
+            <input type="number" name="stok" class="form-control" value="{{ $produk->stok }}" required>
+        </div>
+        <div>
+            <label>Kategori</label>
+            <select name="kategori_id" class="form-control" required>
                 @foreach($kategori as $k)
                 <option value="{{ $k->id }}">{{ $k->nama_kategori }}</option>
                 @endforeach
             </select>
+            </select>
         </div>
-
-            <div class="btn-group">
-                <a href="{{ route('produk.index') }}" class="btn btn-secondary">Kembali</a>
-                <button type="submit" class="btn btn-success">Update Produk</button>
-            </div>
-        </form>
-    </div>
+        <div class="container-button">
+            <button type="submit" class="btn btn-success">🍪 Simpan</button>
+            <a href="{{ route('produk.index') }}">Kembali</a>
+        </div>
+    </form>
 </div>
-
-
 @endsection

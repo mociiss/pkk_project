@@ -2,7 +2,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  background: linear-gradient(135deg, #8C623B, #956a41);
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -36,14 +36,14 @@ body {
   padding: 12px;
   border: none;
   border-radius: 8px;
-  background: #4facfe;
+  background: #8C623B;
   color: white;
   font-size: 16px;
   cursor: pointer;
 }
 
 .login-box button:hover {
-  background: #00c6ff;
+  background: #956a41;
 }
 
 .error {

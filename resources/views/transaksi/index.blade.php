@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Daftar Produk')
+@section('title', 'CatatYuk - Daftar Produk')
 
 @section('content')
 <style>
     body {
-        font-family: Arial, sans-serif;
-        background: #f4f6f9;
+        font-family: 'Poppins', sans-serif;
+        background: #fff7f2;
         margin: 0;
         padding: 0;
     }
@@ -88,9 +88,12 @@
         <thead>
             <tr>
                 <th>No</th>
+                <th>Kasir</th>
+                <th>Pelanggan</th>
                 <th>Tanggal</th>
                 <th>Detail Barang</th>
                 <th>Total</th>
+                <th>Tanggal Pengiriman</th>
                 <th>Aksi</th>
             </tr>
         </thead>
@@ -98,6 +101,8 @@
         @foreach ($transaksi as $index => $t)
             <tr>
                 <td>{{ $index + 1 }}</td>
+                <td>{{ $t->karyawan->nama ?? '-' }}</td>
+                <td>{{ $t->pelanggan->nama ?? '-' }}</td>
                 <td>{{ $t->tanggal }}</td>
                 <td>
                     <ul>
@@ -110,8 +115,8 @@
                     </li>
                     @endforeach
                     <td>Rp {{ number_format($t->total,0,',','.') }}</td>
-</ul>
-</td>
+                    </ul>
+                        <td>{{ $t->tanggal_pengiriman ?? '-' }}</td>
                 <td>
                     <a href="{{ route('transaksi.cetak', $t->id) }}" class="btn-cetak" target="_blank">Cetak Struk</a>
                 </td>

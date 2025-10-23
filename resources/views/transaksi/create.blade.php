@@ -1,78 +1,76 @@
 @extends('layouts.h_transaksi')
 
-@section('title', 'Transaksi')
+@section('title', 'CatatYuk - Transaksi Baru')
 
 @section('content')
-
-{{-- ======== FORM KASIR & PELANGGAN ======== --}}
 <form action="{{ route('transaksi.store') }}" method="POST" id="cart-form">
-@csrf
-<div class="actor-form mb-4 p-3" style="background:#f8f9fa; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1);">
-    <div class="row g-3">
-        {{-- Kasir --}}
-        <div class="col-md-6">
-            <label class="form-label fw-bold">Kasir</label>
-            <input type="text" class="form-control" value="{{ $karyawan->name }}" readonly>
-            <input type="hidden" name="karyawan_id" value="{{ $karyawan->id }}">
-        </div>
+    @csrf
+    <div class="actor-form">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">Kasir</label>
+                <input type="text" class="form-control" value="{{ $karyawan->name }}" readonly>
+                <input type="hidden" name="karyawan_id" value="{{ $karyawan->id }}">
+            </div>
 
-        {{-- Pelanggan --}}
-        <div class="col-md-6">
-            <label class="form-label fw-bold">Pelanggan</label>
-            <select name="pelanggan_id" class="form-select" required>
-                <option value="" disabled selected>-- Pilih Pelanggan --</option>
-                @foreach($pelanggan as $p)
-                    <option value="{{ $p->id }}">{{ $p->nama }}</option>
-                @endforeach
-            </select>
-        </div>
-    </div>
-</div>
+            <div class="col-md-4">
+                <label class="form-label">Pelanggan</label>
+                <select name="pelanggan_id" class="form-select" required>
+                    <option value="" disabled selected>-- Pilih Pelanggan --</option>
+                    @foreach($pelanggan as $p)
+                        <option value="{{ $p->id }}">{{ $p->nama }}</option>
+                    @endforeach
+                </select>
+            </div>
 
-{{-- ======== CARD PRODUK ======== --}}
-<div class="products mb-4">
-    <div class="row g-3">
-        @foreach($produk as $b)
-        <div class="col-md-3">
-            <div class="product-card text-center p-2 border rounded shadow-sm">
-                <img src="{{ asset('images/'.$b->gambar) }}" 
-                     alt="{{ $b->nama_produk }}" 
-                     class="img-fluid rounded mb-2" 
-                     style="height:150px; object-fit:cover;">
-                <h6>{{ $b->nama_produk }}</h6>
-                <p class="mb-1">Rp {{ number_format($b->harga,0,',','.') }}</p>
-                <button type="button" 
-                        class="btn btn-success btn-sm add-to-cart" 
-                        data-id="{{ $b->id }}" 
-                        data-nama="{{ $b->nama_produk }}" 
-                        data-harga="{{ $b->harga }}"
-                        data-gambar="{{ $b->gambar }}">
-                    +
-                </button>
+            <div class="col-md-2">
+                <label for="tanggal_pengiriman" class="form-label">Tanggal Pengantaran</label>
+                <input type="date" name="tanggal_pengiriman" id="tanggal_pengiriman" class="form-control" required>
+            </div>
+
+            <div class="col-md-2">
+                <label for="waktu_pengiriman" class="form-label">Waktu Pengantaran</label>
+                <input type="time" name="waktu_pengiriman" id="waktu_pengiriman" class="form-control" required>
             </div>
         </div>
-        @endforeach
-    </div>
-</div>
-
-{{-- ======== KERANJANG ======== --}}
-<div class="cart mt-4">
-    <h6>Keranjang</h6>
-    <div id="cart-items"></div>
-    <hr>
-    <div class="d-flex justify-content-between">
-        <strong>Total:</strong>
-        <span id="cart-total">Rp 0</span>
     </div>
 
-    {{-- Input hidden keranjang akan disuntik lewat JS --}}
-    <div id="cart-hidden-inputs"></div>
+    <div class="d-flex gap-3">
+        <div class="main-area flex-fill">
+            <div class="product-grid">
+                @foreach($produk as $b)
+                    <div class="product-card">
+                        <img src="{{ asset('images/'.$b->gambar) }}" alt="{{ $b->nama_produk }}">
+                        <h6>{{ $b->nama_produk }}</h6>
+                        <p>Rp {{ number_format($b->harga, 0, ',', '.') }}</p>
+                        <button type="button"
+                                class="add-to-cart"
+                                data-id="{{ $b->id }}"
+                                data-nama="{{ $b->nama_produk }}"
+                                data-harga="{{ $b->harga }}"
+                                data-gambar="{{ $b->gambar }}">
+                            +
+                        </button>
+                    </div>
+                @endforeach
+            </div>
+        </div>
 
-    <button type="submit" class="btn btn-warning w-100 mt-2">Pesan Sekarang</button>
-    <button type="button" class="btn btn-light w-100 mt-2" onclick="clearCart()">Kosongkan Keranjang</button>
-</div>
+        <div class="cart">
+            <h6>🛒 Keranjang</h6>
+            <div id="cart-items"></div>
+            <hr>
+            <div class="d-flex justify-content-between">
+                <strong>Total:</strong>
+                <span id="cart-total">Rp 0</span>
+            </div>
+
+            <div id="cart-hidden-inputs"></div>
+            <button type="submit" class="btn btn-warning w-100 mt-3">Pesan Sekarang</button>
+            <button type="button" class="btn btn-light w-100 mt-2" onclick="clearCart()">Kosongkan Keranjang</button>
+        </div>
+    </div>
 </form>
-
 @endsection
 
 @push('scripts')
@@ -110,6 +108,8 @@
 
         document.getElementById("cart-total").innerText = "Rp " + total.toLocaleString();
     }
+
+    
 
     function updateQty(id, change) {
         let item = cart.find(i => i.id == id);

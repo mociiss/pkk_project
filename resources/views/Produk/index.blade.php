@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Daftar Produk')
+@section('title', 'CatatYuk - Daftar Produk')
 
 @section('content')
 <style>
     body {
-        font-family: Arial, sans-serif;
-        background: #f4f6f9;
+        font-family: 'Poppins', sans-serif;
+        background: #fff7f2;
         margin: 0;
         padding: 0;
     }
@@ -107,8 +107,11 @@
                     @endif
                 </td>
                 <td>Rp {{ number_format($p->harga, 0, ',', '.') }}</td>
-                <td>{{ $p->deskripsi }}</td>
+                <td>
+        {{ $p->kategori ? $p->kategori->nama_kategori : '-' }}
+    </td>
                 <td>{{ $p->stok }}</td>
+</ul>
                 <td>
                     <a href="{{ route('produk.edit', $p) }}" class="btn-edit">Edit</a>
                     <form action="{{ route('produk.destroy', $p) }}" method="POST" style="display:inline">

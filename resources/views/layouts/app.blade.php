@@ -16,12 +16,12 @@
     .main {
       flex: 1;
       padding: 20px;
+      padding-top: 70px;
     }
   </style>
 </head>
 <body>
-  {{-- Sidebar dipanggil dari partials --}}
-  @include('components.sidebar')
+  @include('components.topbar')
 
   {{-- Konten utama --}}
   <div class="main">

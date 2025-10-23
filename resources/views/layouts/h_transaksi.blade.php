@@ -4,159 +4,148 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Point of Sale')</title>
+    <link href="https://fonts.googleapis.com/css2?family=Karla:wght@400;600&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
         body {
-            background: #f4f5f7;
-            font-family: "Segoe UI", sans-serif;
+            background-color: #f6f7fb;
+            font-family: 'Karla', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
         }
 
         .wrapper {
             display: flex;
+            flex-direction: column;
             min-height: 100vh;
         }
 
-        /* Sidebar */
-        .sidebar {
-            width: 230px;
-            background: #fff;
-            border-right: 1px solid #ddd;
-            padding: 20px;
-            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
-        }
-
-        .sidebar h4 {
-            font-weight: bold;
-            font-size: 18px;
-            margin-bottom: 30px;
-            color: #333;
-        }
-
-        .sidebar a {
-            display: block;
-            color: #333;
-            text-decoration: none;
-            margin: 10px 0;
-            padding: 8px 12px;
-            border-radius: 6px;
-            transition: 0.2s;
-        }
-
-        .sidebar a:hover, .sidebar a.active {
-            background: #ff8800;
-            color: white;
-        }
-
-        /* Konten utama */
         .content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-        }
-
-        /* Bagian produk dan keranjang sejajar */
-        .main-area {
-            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            padding: 100px 25px 30px;
             gap: 20px;
-            flex: 1;
-            margin-top: 10px;
         }
 
-        /* Daftar produk (kiri) */
-        .products {
+        .main-area {
             flex: 1;
             overflow-y: auto;
-            padding-right: 10px;
         }
 
-        /* Kartu produk */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
         .product-card {
-            border: 1px solid #ddd;
-            border-radius: 12px;
             background: #fff;
-            overflow: hidden;
-            transition: .2s;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+            padding: 10px;
         }
 
         .product-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.1);
         }
 
         .product-card img {
             width: 100%;
-            height: 150px;
+            height: 140px;
             object-fit: cover;
+            border-radius: 10px;
         }
 
         .product-card h6 {
-            font-weight: 600;
             margin-top: 10px;
+            font-size: 15px;
+            font-weight: bolder;
         }
 
         .product-card p {
-            color: #555;
-            font-size: 14px;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 6px;
         }
 
-        .btn-plus, .btn-minus {
-            width: 28px;
-            height: 28px;
+        .product-card button {
+            background: #ff7a00;
             border: none;
-            border-radius: 50%;
-            background: #ff6600;
             color: #fff;
-            font-weight: bold;
-            line-height: 1;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
         }
 
-        /* Keranjang di kanan */
         .cart {
-            width: 320px;
-            background: #fff;
-            border-left: 1px solid #ddd;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: -2px 0 8px rgba(0,0,0,0.05);
             position: sticky;
-            top: 20px;
+            top: 90px;
+            width: 320px;
+            min-width: 100px;
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
             height: fit-content;
-            max-height: calc(100vh - 100px);
+            max-height: calc(100vh - 120px);
             overflow-y: auto;
         }
 
         .cart h6 {
-            font-weight: bold;
+            font-weight: 600;
             font-size: 16px;
             margin-bottom: 15px;
         }
 
-        .cart hr {
-            margin: 10px 0;
+        .cart-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
         }
 
-        .cart button {
+        .cart-item img {
+            width: 45px;
+            height: 45px;
+            object-fit: cover;
             border-radius: 8px;
-            font-weight: 500;
+            margin-right: 10px;
         }
 
-        /* Form kasir dan pelanggan */
+        .cart-item .info {
+            flex-grow: 1;
+        }
+
+        .cart-item small {
+            color: #666;
+        }
+
+        .btn-minus, .btn-plus {
+            background: #ff7a00;
+            border: none;
+            color: #fff;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            line-height: 1;
+        }
+
         .actor-form {
             background: #fff;
-            padding: 20px;
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 20px;
+            margin-bottom: 20px;
         }
 
-        .actor-form label {
+        label {
             font-weight: 600;
             color: #333;
         }
 
-        /* Scroll halus */
         ::-webkit-scrollbar {
             width: 6px;
         }
@@ -165,15 +154,15 @@
             border-radius: 10px;
         }
 
-        /* Responsif */
-        @media (max-width: 992px) {
-            .main-area {
+        @media (max-width: 400px) {
+            .content {
                 flex-direction: column;
             }
             .cart {
                 width: 100%;
-                margin-top: 20px;
                 position: relative;
+                top: 0;
+                margin-top: 20px;
             }
         }
     </style>
@@ -181,10 +170,8 @@
 
 <body>
     <div class="wrapper">
-        {{-- Sidebar kiri --}}
-        @include('components.sidebar')
+        @include('components.topbar')
 
-        {{-- Konten utama --}}
         <div class="content">
             @yield('content')
         </div>

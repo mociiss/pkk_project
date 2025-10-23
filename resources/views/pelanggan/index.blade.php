@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Daftar Pelanggan')
+@section('title', 'CatatYuk - Daftar Pelanggan')
 
 @section('content')
 <style>
     body {
-        font-family: Arial, sans-serif;
-        background: #f4f6f9;
+        font-family: "Poppins", sans-serif;
+        background: #fff7f2;
         margin: 0;
         padding: 0;
     }

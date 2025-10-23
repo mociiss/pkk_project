@@ -13,4 +13,8 @@ class pelanggan extends Model
         'alamat',
         'no_telp'
     ];
+
+    public function transaksi(){
+        return $this->hasMany(Transaksi::class, 'pelanggan_id');
+    }
 }

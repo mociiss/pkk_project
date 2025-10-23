@@ -25,4 +25,5 @@ Route::resource('karyawan', KaryawanController::class);
 Route::resource('pelanggan', PelangganController::class);
 
 Route::resource('transaksi', TransaksiController::class);
+Route::post('/transaksi', [TransaksiController::class, 'store'])->name('transaksi.store');
 Route::get('/transaksi/{id}/cetak', [TransaksiController::class, 'cetakStruk'])->name('transaksi.cetak');

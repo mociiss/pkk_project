@@ -2,119 +2,132 @@
 
 @section('content')
 <style>
-    .container {
-        display: flex;
-        justify-content: center;
-        padding: 30px;
+    body {
+        background-color: #fff8f1;
+        font-family: "Karla", sans-serif;
     }
-    .form-wrapper {
-        width: 100%;
-        max-width: 600px;
-        background: #fff;
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+
+    .custom-container {
+        background-color: #fffdfa;
+        padding: 35px;
+        border-radius: 20px;
+        max-width: 650px;
+        margin: 40px auto;
+        box-shadow: 0 6px 20px rgba(139, 90, 43, 0.15);
+        border: 1px solid #f0e4d7;
     }
-    .form-wrapper h1 {
-        margin-bottom: 20px;
-        font-size: 24px;
-        color: #333;
+
+    .custom-container h1 {
         text-align: center;
+        margin-bottom: 25px;
+        color: #6b3e18;
+        font-family: "Pacifico", cursive;
+        font-size: 36px;
+        letter-spacing: 1px;
     }
-    .form-group {
-        margin-bottom: 15px;
-    }
-    .form-group label {
-        display: block;
-        margin-bottom: 6px;
+
+    .custom-form label {
         font-weight: 600;
-        color: #444;
+        color: #5c3c1d;
+        margin-bottom: 8px;
+        display: block;
     }
-    .form-group input, 
-    .form-group textarea {
+
+    .custom-form .form-control {
+        border-radius: 10px;
+        padding: 10px 15px;
+        margin-bottom: 18px;
+        border: 1.5px solid #d5bfa3;
         width: 100%;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
+        background-color: #fffaf4;
+        transition: all 0.3s ease;
+    }
+
+    .custom-form .form-control:focus {
+        border-color: #c27a3f;
+        box-shadow: 0 0 6px rgba(194, 122, 63, 0.3);
         outline: none;
-        transition: border-color 0.3s;
-        font-size: 14px;
     }
-    .form-group input:focus, 
-    .form-group textarea:focus {
-        border-color: #007bff;
+
+  /* Tombol */
+  .container-button {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 20px;
+  }
+
+  .container-button .btn-success,
+  .container-button a {
+      flex: 1;
+      text-align: center;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      font-family: "Karla", sans-serif;
+      transition: all 0.3s ease;
+  }
+
+  .container-button .btn-success {
+      background-color: #b46a2b;
+      color: #fffdfa;
+  }
+
+  .container-button .btn-success:hover {
+      background-color: #d47f3d;
+      transform: translateY(-2px);
+  }
+
+  .container-button a {
+      background-color: #e5c8a8;
+      color: #5a3a1b;
+  }
+
+  .container-button a:hover {
+      background-color: #f1d3b0;
+      transform: translateY(-2px);
+  }
+
+    .custom-container {
+    animation: fadeIn 0.6s ease;
     }
-    .preview-img {
-        display: block;
-        margin-bottom: 10px;
-        border-radius: 6px;
-    }
-    .btn-group {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 20px;
-    }
-    .btn {
-        padding: 10px 18px;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: 600;
-        text-align: center;
-        cursor: pointer;
-        transition: background 0.3s;
-    }
-    .btn-secondary {
-        background: #6c757d;
-        color: white;
-    }
-    .btn-secondary:hover {
-        background: #5a6268;
-    }
-    .btn-success {
-        background: #28a745;
-        color: white;
-        border: none;
-    }
-    .btn-success:hover {
-        background: #218838;
+
+    @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
     }
 </style>
-<div class="container">
-    <div class="form-wrapper">
-        <h1>Edit Data</h1>
-        <form action="{{ route('karyawan.update', $karyawan) }}" method="POST" enctype="multipart/form-data">
-            @csrf @method('PUT')
-
-            <div class="form-group">
-                <label>Nama Lengkap</label>
-                <input type="text" name="nama" value="{{ $karyawan->nama }}" required>
-            </div>
-
-            <div class="form-group">
-                <label>Jenis Kelamin</label>
-                <select name="jenis_kelamin" class="form-control" required>
+<div class="custom-container">
+    <h1>Edit Data Karyawan</h1>
+    <form action="{{ route('karyawan.update', $karyawan) }}" method="POST" enctype="multipart/form-data" class="custom-form">
+        @csrf 
+        @method('PUT')
+        <div>
+            <label>Nama Lengkap</label>
+            <input type="text" name="nama" class="form-control" value="{{ $karyawan->nama }}" required>
+        </div>
+        <div>
+            <label>Jenis Kelamin</label>
+            <select name="jenis_kelamin" class="form-control" required>
                     <option value="Laki-laki" {{ $karyawan->jenis_kelamin == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
                     <option value="Perempuan" {{ $karyawan->jenis_kelamin == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
                 </select>
-            </div>
-
-            <div class="form-group">
-                <label>Alamat</label>
-                <textarea name="alamat" rows="4" required>{{ $karyawan->alamat }}</textarea>
-            </div>
-
-            <div class="form-group">
-                <label>No Telepon</label>
-                <input type="number" name="no_telp" value="{{ $karyawan->no_telp }}" required>
-            </div>
-
-            <div class="btn-group">
-                <a href="{{ route('karyawan.index') }}" class="btn btn-secondary">Kembali</a>
-                <button type="submit" class="btn btn-success">Edit Data</button>
-            </div>
-        </form>
-    </div>
+        </div>
+        <div>
+            <label>Alamat</label>
+            <textarea name="alamat" class="form-control" required>{{ $karyawan->alamat }}</textarea>
+        </div>
+        <div>
+            <label>No Telepon</label>
+            <input type="number" name="no_telp" value="{{ $karyawan->no_telp}}" class="form-control">
+        </div>
+        <div class="container-button">
+            <button type="submit" class="btn btn-success">🍪 Simpan</button>
+            <a href="{{ route('karyawan.index') }}">Kembali</a>
+        </div>
+    </form>
 </div>
-
-
 @endsection

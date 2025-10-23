@@ -14,5 +14,13 @@ class Karyawan extends Model
         'alamat',
         'no_telp'
     ];
+
+    public function transaksi(){
+        return $this->hasMany(Transaksi::class, 'karyawan_id');
+    }
+
+    public function user(){
+        return $this->belongsTo(user::class);
+    }
 }
     
