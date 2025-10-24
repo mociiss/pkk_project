@@ -80,28 +80,42 @@
       box-shadow: 0 2px 5px rgba(74, 54, 43, 0.34);
     }
 
-    
+    /* ==== Notifikasi ==== */
     .notif-section {
       display: flex;
       align-items: center;
       gap: 15px;
+      position: relative;
     }
 
     .notification {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      position: relative;
+      display: inline-block;
     }
 
     .notification img {
-      width: 26px;
-      height: 26px;
+      width: 28px;
+      height: 28px;
       cursor: pointer;
       transition: transform 0.2s;
     }
 
     .notification img:hover {
       transform: scale(1.1);
+    }
+
+    .badge {
+      position: absolute;
+      top: -5px;
+      right: -10px;
+      background: #dc3545;
+      color: white;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 3px 6px;
+      border-radius: 50%;
+      line-height: 1;
+      border: 2px solid #8C623B; /* biar kelihatan rapi di atas topbar */
     }
 
     .user-info {
@@ -159,6 +173,11 @@
       <a href="{{ route('dashboard') }}">Catat<span>Yuk</span></a>
     </div>
 
+    @php
+        use App\Models\Notification;
+        $unread = Notification::where('is_read', false)->count();
+    @endphp
+
     <nav class="menu">
       <a href="{{ route('dashboard') }}" class="menu-item {{ request()->is('dashboard') ? 'active' : '' }}">Dashboard</a>
       <a href="{{ route('produk.index') }}" class="menu-item {{ request()->is('produk*') ? 'active' : '' }}">Produk</a>
@@ -167,10 +186,14 @@
       <a href="{{ route('transaksi.index') }}" class="menu-item {{ request()->is('transaksi*') ? 'active' : '' }}">Transaksi</a>
     </nav>
 
-
     <div class="notif-section">
       <div class="notification">
-        <img src="{{ asset('images/notification_48px.png') }}" alt="Notifikasi">
+        <a href="{{ route('notifikasi.index') }}">
+          <img src="{{ asset('images/notification_48px.png') }}" alt="Notifikasi">
+          @if($unread > 0)
+              <span class="badge">{{ $unread }}</span>
+          @endif
+        </a>
       </div>
 
       <div class="user-info">

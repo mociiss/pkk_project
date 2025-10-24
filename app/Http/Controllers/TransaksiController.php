@@ -71,7 +71,7 @@ class TransaksiController extends Controller
         Notification::create([
             'transaksi_id' => $transaksi->id,
             'title' => 'Pesanan ' . ($pelanggan->nama ?? 'Pelanggan tidak ada dalam data.'),
-            'message' => $produkItem . '. Total : Rp ' . number_format($total,0,',','.') . '. Pengantaran : ' . ($request->tanggal_pengantaran ?? '-') . '.pukul ' . ($request->waktu_pengantaran ?? '-') 
+            'message' => $produkItem . '. Total : Rp ' . number_format($total,0,',','.') . '   Pengantaran : ' . ($request->tanggal_pengantaran ?? '-') . ' pukul ' . ($request->waktu_pengantaran ?? '-') 
         ]);
 
         return redirect()->route('transaksi.index')->with('Success', 'Data Transaksi Berhasil Dikirim!');
