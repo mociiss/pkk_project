@@ -12,47 +12,51 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $totalUsers = User::count();
-        $recentUsers = User::latest()->take(5)->get();
-        // Total semua penjualan
+        $totalProdukTerjual = DB::table('transaksi_detail as td')
+            ->join('transaksi as t', 't.id', '=', 'td.transaksi_id')
+            ->where('t.status', '!=', 'Dibatalkan')
+            ->sum('td.jumlah');
 
-        $totalProdukTerjual = DB::table('transaksi_detail')->sum('jumlah');
+        $totalPenjualan = DB::table('transaksi_detail as td')
+            ->join('transaksi as t', 't.id', '=', 'td.transaksi_id')
+            ->where('t.status', '!=', 'Dibatalkan')
+            ->sum('td.subtotal');
 
-        $totalPenjualan = DB::table('transaksi_detail')->sum('subtotal');
-
-        // Total hari ini
         $totalHariIni = DB::table('transaksi as t')
             ->join('transaksi_detail as d', 't.id', '=', 'd.transaksi_id')
             ->whereDate('t.created_at', Carbon::today())
+            ->where('t.status', '!=', 'Dibatalkan')
             ->sum('d.subtotal');
 
-        // Total minggu ini
         $totalMingguIni = DB::table('transaksi as t')
             ->join('transaksi_detail as d', 't.id', '=', 'd.transaksi_id')
             ->whereBetween('t.created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
+            ->where('t.status', '!=', 'Dibatalkan')
             ->sum('d.subtotal');
 
-        // Total bulan ini
         $totalBulanIni = DB::table('transaksi as t')
             ->join('transaksi_detail as d', 't.id', '=', 'd.transaksi_id')
             ->whereMonth('t.created_at', Carbon::now()->month)
+            ->where('t.status', '!=', 'Dibatalkan')
             ->sum('d.subtotal');
 
-        // Data untuk grafik (misalnya penjualan per bulan)
         $penjualanPerBulan = DB::table('transaksi as t')
             ->join('transaksi_detail as d', 't.id', '=', 'd.transaksi_id')
-            ->select(DB::raw('MONTH(t.created_at) as bulan'), DB::raw('SUM(d.subtotal) as total'))
+            ->where('t.status', '!=', 'Dibatalkan')
+            ->select(
+                DB::raw('MONTH(t.created_at) as bulan'),
+                DB::raw('SUM(d.subtotal) as total')
+            )
             ->groupBy(DB::raw('MONTH(t.created_at)'))
             ->get();
 
         return view('dashboard', compact(
-        'totalUsers',
-        'recentUsers',
-        'totalPenjualan',
-        'totalHariIni',
-        'totalMingguIni',
-        'totalBulanIni',
-        'penjualanPerBulan',
-        'totalProdukTerjual'));
-}
+            'totalPenjualan',
+            'totalHariIni',
+            'totalMingguIni',
+            'totalBulanIni',
+            'penjualanPerBulan',
+            'totalProdukTerjual'
+        ));
+    }
 }

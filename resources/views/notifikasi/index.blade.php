@@ -80,21 +80,21 @@
     }
 
     .btn-primary {
-        background-color: #0d6efd;
+        background-color: #8e6e4fff;
         border: none;
     }
 
     .btn-danger {
-        background-color: #dc3545;
+        background-color: #8e6e4fff;
         border: none;
     }
 
     .btn-primary:hover {
-        background-color: #0b5ed7;
+        background-color: #a27e59ff;
     }
 
     .btn-danger:hover {
-        background-color: #bb2d3b;
+        background-color: #a27e59ff;
     }
 
     .no-notif {
@@ -127,12 +127,12 @@
                 <div class="list-group-item d-flex justify-content-between align-items-start {{ $notif->is_read ? '' : 'bg-light' }}">
                     <div class="ms-2 me-auto">
                         <div class="fw-bold">{{ $notif->title }}</div>
-                        {{ $notif->message }}
+                        {!! nl2br (e($notif->message)) !!}
                         <div class="text-muted small">{{ $notif->created_at->diffForHumans() }}</div>
                     </div>
                     <div class="btn-confirm">
-                        @if(!$notif->is_read)
-                            <form action="{{ route('notifikasi.read', $notif->id) }}" method="POST">
+                        @if($notif->transaksi && $notif->transaksi->status == 'Belum Selesai')
+                            <form action="{{ route('notifikasi.markAsRead', $notif->id) }}" method="POST">
                                 @csrf
                                 <button class="btn btn-sm btn-primary">Pesanan Selesai</button>
                             </form>

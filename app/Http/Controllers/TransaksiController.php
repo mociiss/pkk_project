@@ -16,9 +16,21 @@ use Illuminate\Support\Facades\DB;
 
 class TransaksiController extends Controller
 {
-    public function index(){
-        $transaksi = Transaksi::with(['detail.produk','karyawan','pelanggan'])->get();
-        return view('transaksi.index', compact('transaksi'));
+    public function index(Request $request){
+        $status = $request->get('status'); 
+
+    if ($status) {
+        $transaksi = Transaksi::with(['detail.produk','karyawan','pelanggan'])
+            ->where('status', $status)
+            ->orderBy('created_at', 'desc')
+            ->get();
+    } else {
+        $transaksi = Transaksi::with(['detail.produk','karyawan','pelanggan'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
+
+    return view('transaksi.index', compact('transaksi', 'status'));
     }
 
     public function create(){
@@ -36,7 +48,8 @@ class TransaksiController extends Controller
             'tanggal' => now(),
             'tanggal_pengiriman' => $request->tanggal_pengiriman,
             'waktu_pengiriman' => $request->waktu_pengiriman,
-            'total' => 0
+            'total' => 0,
+            'status' => 'Belum Selesai'
         ]);
 
         $total = 0;
@@ -71,11 +84,28 @@ class TransaksiController extends Controller
         Notification::create([
             'transaksi_id' => $transaksi->id,
             'title' => 'Pesanan ' . ($pelanggan->nama ?? 'Pelanggan tidak ada dalam data.'),
-            'message' => $produkItem . '. Total : Rp ' . number_format($total,0,',','.') . '   Pengantaran : ' . ($request->tanggal_pengantaran ?? '-') . ' pukul ' . ($request->waktu_pengantaran ?? '-') 
+            'message' => "• " . $produkItem . 
+            "\n• Total: Rp " . number_format($total, 0, ',', '.') . 
+            "\n• Pengantaran: " . 
+            \Carbon\Carbon::parse($request->tanggal_pengiriman)->translatedFormat('d F Y') . 
+            ', pukul ' . ($request->waktu_pengiriman ?? '-')
+
         ]);
 
         return redirect()->route('transaksi.index')->with('Success', 'Data Transaksi Berhasil Dikirim!');
     }
+
+    public function selesai($id)
+{
+    $transaksi = Transaksi::findOrFail($id);
+    $transaksi->update(['status' => 'Selesai']);
+
+    // Hapus notifikasi terkait transaksi ini
+    Notification::where('transaksi_id', $id)->delete();
+
+    return redirect()->route('transaksi.index')->with('success', 'Pesanan telah diselesaikan dan notifikasi dihapus.');
+}
+
 
     public function cetakStruk($id){
         $transaksi = Transaksi::with('detail.produk')->findOrFail($id);

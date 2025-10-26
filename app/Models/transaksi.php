@@ -14,7 +14,8 @@ class transaksi extends Model
         'tanggal',
         'tanggal_pengiriman',
         'waktu_pengiriman',
-        'total'
+        'total',
+        'status'
     ];
 
     public function detail(){

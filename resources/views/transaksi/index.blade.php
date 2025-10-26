@@ -78,11 +78,38 @@
     .btn-delete:hover {
         background: #c82333;
     }
+    .btn-primary {
+        background-color: #8C623B;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background-color: #A27E59;
+    }
+
+    .form-select {
+        border-radius: 8px;
+    }
+
+    .table {
+        border-radius: 10px;
+        overflow: hidden;
+    }
 </style>
 
 <div class="container">
     <h1>Data Transaksi</h1>
     <a href="{{ route('transaksi.create') }}" class="btn-add">+ Tambah Data Transaksi</a>
+    <form action="{{ route('transaksi.index') }}" method="GET" class="mb-3 d-flex" style="gap: 10px; align-items:center;">
+        <label for="status" class="fw-semibold">Filter Status:</label>
+        <select name="status" id="status" class="form-select w-auto">
+            <option value="">Semua</option>
+            <option value="Selesai" {{ request('status') == 'Selesai' ? 'selected' : '' }}>Selesai</option>
+            <option value="Belum selesai" {{ request('status') == 'Belum selesai' ? 'selected' : '' }}>Belum Selesai</option>
+            <option value="Dibatalkan" {{ request('status') == 'Dibatalkan' ? 'selected' : '' }}>Dibatalkan</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Terapkan</button>
+    </form>
 
     <table>
         <thead>
@@ -94,6 +121,7 @@
                 <th>Detail Barang</th>
                 <th>Total</th>
                 <th>Tanggal Pengiriman</th>
+                <th>Status</th>
                 <th>Aksi</th>
             </tr>
         </thead>
@@ -116,7 +144,9 @@
                     @endforeach
                     <td>Rp {{ number_format($t->total,0,',','.') }}</td>
                     </ul>
+                        </td>
                         <td>{{ $t->tanggal_pengiriman ?? '-' }}</td>
+                        <td>{{ $t->status }}</td>
                 <td>
                     <a href="{{ route('transaksi.cetak', $t->id) }}" class="btn-cetak" target="_blank">Cetak Struk</a>
                 </td>
