@@ -179,6 +179,22 @@
     @endphp
 
     <nav class="menu">
+      @if(auth()->check()&& Auth::user()->role == 'Admin')
+      <a href="{{ route('dashboard') }}" class="menu-item {{ request()->is('dashboard') ? 'active' : '' }}">Dashboard</a>
+      <a href="{{ route('produk.index') }}" class="menu-item {{ request()->is('produk*') ? 'active' : '' }}">Produk</a>
+      <a href="{{ route('karyawan.index') }}" class="menu-item {{ request()->is('karyawan*') ? 'active' : '' }}">Karyawan</a>
+      <a href="{{ route('pelanggan.index') }}" class="menu-item {{ request()->is('pelanggan*') ? 'active' : '' }}">Pelanggan</a>
+      <a href="{{ route('transaksi.index') }}" class="menu-item {{ request()->is('transaksi*') ? 'active' : '' }}">Transaksi</a>
+      @endif
+
+      @if(auth()->check()&& Auth::user()->role == 'Kasir')
+      <a href="{{ route('dashboard') }}" class="menu item {{ request()->is('dashboard') ? 'active' : '' }}">Dashboard</a>
+      <a href="{{ route('produk.index') }}" class="menu-item {{ request()->is('produk*') ? 'active' : '' }}">Produk</a>
+      <a href="{{ route('pelanggan.index') }}" class="menu-item {{ request()->is('pelanggan*') ? 'active' : '' }}">Pelanggan</a>
+      <a href="{{ route('transaksi.index') }}" class="menu-item {{ request()->is('transaksi*') ? 'active' : '' }}">Transaksi</a>
+      @endif
+
+      @if(auth()->check()&& Auth::user()->role == 'Owner')
       <a href="{{ route('dashboard') }}" class="menu-item {{ request()->is('dashboard') ? 'active' : '' }}">Dashboard</a>
       <a href="{{ route('produk.index') }}" class="menu-item {{ request()->is('produk*') ? 'active' : '' }}">Produk</a>
       <a href="{{ route('karyawan.index') }}" class="menu-item {{ request()->is('karyawan*') ? 'active' : '' }}">Karyawan</a>
@@ -195,7 +211,26 @@
           @endif
         </a>
       </div>
+      @endif
 
+      @if(auth()->check()&& Auth::user()->role == 'Koki')
+      <nav class="menu">
+         <a href="{{ route('pelanggan.index') }}" class="menu-item {{ request()->is('pelanggan*') ? 'active' : '' }}">Pelanggan</a>
+        <a href="{{ route('produk.index') }}" class="menu-item {{ request()->is('produk*') ? 'active' : '' }}">Produk</a>
+        <a href="{{ route('transaksi.index') }}" class="menu-item {{ request()->is('transaksi*') ? 'active' : '' }}">Transaksi</a>
+      </nav>
+      <div class="notif-section">
+      <div class="notification">
+        <a href="{{ route('notifikasi.index') }}">
+          <img src="{{ asset('images/notification_48px.png') }}" alt="Notifikasi">
+          @if($unread > 0)
+              <span class="badge">{{ $unread }}</span>
+          @endif
+        </a>
+      </div>
+  </div>
+      @endif
+<div class="notif-section">
       <div class="user-info">
         <small>Logged in as:</small><br>
         <div class="user-name">{{ Auth::user()->name }}</div>

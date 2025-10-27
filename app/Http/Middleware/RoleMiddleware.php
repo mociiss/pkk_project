@@ -3,15 +3,13 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 
 class RoleMiddleware
 {
-        public function handle($request, Closure $next, ...$roles)
+    public function handle($request, Closure $next, ...$roles)
     {
-        if (! Auth::check()) {
+        if (!Auth::check()) {
             return redirect()->route('login');
         }
 
@@ -19,7 +17,7 @@ class RoleMiddleware
 
         $allowed = [];
         foreach ($roles as $r) {
-            if (! is_string($r) || $r === '') continue;
+            if (!is_string($r) || $r === '') continue;
             $parts = preg_split('/[|,]/', $r);
             foreach ($parts as $p) {
                 $p = trim($p);
@@ -32,15 +30,10 @@ class RoleMiddleware
             abort(403, 'Akses tidak diizinkan.');
         }
 
-        if (! in_array(strtolower($userRole), $allowed, true)) {
+        if (!in_array(strtolower($userRole), $allowed, true)) {
             abort(403, 'Anda tidak punya akses ke halaman ini.');
         }
 
         return $next($request);
     }
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
 }
