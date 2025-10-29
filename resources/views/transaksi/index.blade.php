@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'CatatYuk - Daftar Produk')
+@section('title', 'CatatYuk - Data Transaksi')
 
 @section('content')
 <style>
@@ -82,77 +82,103 @@
         background-color: #8C623B;
         border: none;
     }
-
     .btn-primary:hover {
         background-color: #A27E59;
     }
-
     .form-select {
         border-radius: 8px;
     }
-
     .table {
         border-radius: 10px;
         overflow: hidden;
+    }
+    .filter-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 16px 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 25px;
+        transition: 0.3s;
+        border-left: 6px solid #8C623B;
+    }
+
+    .filter-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .filter-header h5 {
+        margin: 0;
+        font-size: 16px;
+        color: #8C623B;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .filter-body {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .filter-select {
+        width: 250px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        padding: 8px 12px;
+        font-size: 18px;
+        transition: 0.3s;
+    }
+
+    .filter-select:focus {
+        border-color: #8C623B;
+        box-shadow: 0 0 5px rgba(140,98,59,0.3);
     }
 </style>
 
 <div class="container">
     <h1>Data Transaksi</h1>
-    <a href="{{ route('transaksi.create') }}" class="btn-add">+ Tambah Data Transaksi</a>
-    <form action="{{ route('transaksi.index') }}" method="GET" class="mb-3 d-flex" style="gap: 10px; align-items:center;">
-        <label for="status" class="fw-semibold">Filter Status:</label>
-        <select name="status" id="status" class="form-select w-auto">
-            <option value="">Semua</option>
-            <option value="Selesai" {{ request('status') == 'Selesai' ? 'selected' : '' }}>Selesai</option>
-            <option value="Belum selesai" {{ request('status') == 'Belum selesai' ? 'selected' : '' }}>Belum Selesai</option>
-            <option value="Dibatalkan" {{ request('status') == 'Dibatalkan' ? 'selected' : '' }}>Dibatalkan</option>
-        </select>
-        <button type="submit" class="btn btn-primary">Terapkan</button>
-    </form>
 
-    <table>
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Kasir</th>
-                <th>Pelanggan</th>
-                <th>Tanggal</th>
-                <th>Detail Barang</th>
-                <th>Total</th>
-                <th>Tanggal Pengiriman</th>
-                <th>Status</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach ($transaksi as $index => $t)
-            <tr>
-                <td>{{ $index + 1 }}</td>
-                <td>{{ $t->karyawan->nama ?? '-' }}</td>
-                <td>{{ $t->pelanggan->nama ?? '-' }}</td>
-                <td>{{ $t->tanggal }}</td>
-                <td>
-                    <ul>
-                    @foreach($t->detail as $td)
-                    <li>
-                        {{ $td->produk->nama_produk }}
-                        ({{ $td->jumlah }} x Rp {{ number_format($td->harga, 0,',','.') }}) :
-                        <b>Rp {{ number_format($td->subtotal, 0,',','.') }}</b>
-                        
-                    </li>
-                    @endforeach
-                    <td>Rp {{ number_format($t->total,0,',','.') }}</td>
-                    </ul>
-                        </td>
-                        <td>{{ $t->tanggal_pengiriman ?? '-' }}</td>
-                        <td>{{ $t->status }}</td>
-                <td>
-                    <a href="{{ route('transaksi.cetak', $t->id) }}" class="btn-cetak" target="_blank">Cetak Struk</a>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+    <a href="{{ route('transaksi.create') }}" class="btn-add">+ Tambah Data Transaksi</a>
+
+    <div class="filter-card">
+        <div class="filter-header">
+        <h5>Status Transaksi</h5>
+        <select id="status" class="form-select filter-select">
+            <option value="">Semua</option>
+            <option value="Selesai">Selesai</option>
+            <option value="Belum selesai">Belum Selesai</option>
+            <option value="Dibatalkan">Dibatalkan</option>
+        </select>
 </div>
+    </div>
+
+    <div id="table-container">
+        @include('transaksi.table', ['transaksi' => $transaksi])
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const statusFilter = document.getElementById('status');
+    const tableContainer = document.getElementById('table-container');
+
+    statusFilter.addEventListener('change', function() {
+        const status = this.value;
+        fetch(`{{ route('transaksi.index') }}?status=${status}`, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(response => response.text())
+        .then(html => {
+            tableContainer.innerHTML = html;
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
+</script>
 @endsection

@@ -57,18 +57,41 @@
         </div>
 
         <div class="cart">
-            <h6>🛒 Keranjang</h6>
-            <div id="cart-items"></div>
-            <hr>
-            <div class="d-flex justify-content-between">
-                <strong>Total:</strong>
-                <span id="cart-total">Rp 0</span>
-            </div>
+    <h6>🛒 Keranjang</h6>
+    <div id="cart-items"></div>
+    <hr>
+    <div class="d-flex justify-content-between">
+        <strong>Total:</strong>
+        <span id="cart-total">Rp 0</span>
+    </div>
 
-            <div id="cart-hidden-inputs"></div>
-            <button type="submit" class="btn btn-warning w-100 mt-3">Pesan Sekarang</button>
-            <button type="button" class="btn btn-light w-100 mt-2" onclick="clearCart()">Kosongkan Keranjang</button>
-        </div>
+    <div class="mt-3">
+    <label for="metode_pembayaran" class="form-label">Metode Pembayaran</label>
+    <select name="metode_pembayaran" id="metode_pembayaran" class="form-select" required>
+        <option value="" disabled selected>-- Pilih Metode --</option>
+        <option value="Cash">Cash</option>
+        <option value="E-Wallet">E-Wallet</option>
+    </select>
+    </div>
+
+    <div class="mt-3" id="cash-section" style="display: none;">
+        <label for="jumlah_bayar" class="form-label">Jumlah Uang Diterima</label>
+        <input type="number" step="0.01" class="form-control" id="jumlah_bayar" name="jumlah_bayar" placeholder="Masukkan nominal pembayaran">
+        <div class="mt-2 text-success fw-bold">Kembalian: <span id="kembalian-display">Rp 0</span></div>
+    </div>
+
+    <div class="mt-3" id="ewallet-section" style="display: none;">
+        <label class="form-label">QR E-Wallet</label>
+        <p class="text-muted small mb-2">Scan QR berikut untuk membayar:</p>
+        <img src="{{ asset('images/qris-catatyuk.png') }}" alt="QR E-Wallet" width="300" class="border rounded">
+        
+    </div>
+
+        <div id="cart-hidden-inputs"></div>
+        <button type="submit" class="btn btn-warning w-100 mt-3">Pesan Sekarang</button>
+        <button type="button" class="btn btn-light w-100 mt-2" onclick="clearCart()">Kosongkan Keranjang</button>
+    </div>
+
     </div>
 </form>
 @endsection
@@ -141,5 +164,42 @@
             renderCart();
         });
     });
+    const metodeSelect = document.getElementById('metode_pembayaran');
+    const cashSection = document.getElementById('cash-section');
+    const ewalletSection = document.getElementById('ewallet-section');
+    const jumlahBayarInput = document.getElementById('jumlah_bayar');
+    const kembalianDisplay = document.getElementById('kembalian-display');
+    const totalElement = document.getElementById('cart-total');
+
+    metodeSelect.addEventListener('change', function() {
+        cashSection.style.display = this.value === 'Cash' ? 'block' : 'none';
+        ewalletSection.style.display = this.value === 'E-Wallet' ? 'block' : 'none';
+    });
+
+    jumlahBayarInput?.addEventListener('input', function() {
+        const total = parseInt(totalElement.textContent.replace(/[^\d]/g, '')) || 0;
+        const bayar = parseFloat(this.value) || 0;
+        const kembalian = bayar - total;
+        kembalianDisplay.textContent = 'Rp ' + (kembalian > 0 ? kembalian.toLocaleString() : 0);
+    });
 </script>
+<!-- <script>
+    document.getElementById('metode_pembayaran').addEventListener('change', function() {
+    const metode = this.value;
+    const qrisSection = document.getElementById('qris-section');
+    const jumlahBayarWrapper = document.getElementById('jumlah-bayar-wrapper');
+
+    if (metode === 'Cash') {
+        qrisSection.style.display = 'none';
+        jumlahBayarWrapper.style.display = 'block';
+    } else if (metode === 'E-Wallet') {
+        qrisSection.style.display = 'block';
+        jumlahBayarWrapper.style.display = 'none';
+    } else {
+        qrisSection.style.display = 'none';
+        jumlahBayarWrapper.style.display = 'none';
+    }
+});
+
+</script> -->
 @endpush

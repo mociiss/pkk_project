@@ -84,7 +84,7 @@
         .cart {
             position: sticky;
             top: 90px;
-            width: 320px;
+            width: 380px;
             min-width: 100px;
             background: #fff;
             border-radius: 12px;

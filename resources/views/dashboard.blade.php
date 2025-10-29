@@ -28,6 +28,7 @@
     }
     .mini-cards {
         display: flex;
+        flex-wrap: wrap;
         margin-top: 15px;
     }
     .mini-card {
@@ -57,79 +58,86 @@
         width: 100%;
         height: 30rem;
     }
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 15px;
+    .btn-group-laporan {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin: 20px;
     }
-    table th, table td {
-        border-bottom: 1px solid #d7ccc8;
-        padding: 8px;
-        text-align: left;
-    }
-    table th {
-        color: #6d4c41;
+    .btn-laporan {
+        background-color: #8C623B;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
         font-size: 14px;
+        text-decoration: none;
+        transition: 0.3s;
     }
-    table td {
-        color: #3e2723;
-        font-size: 14px;
+    .btn-laporan:hover {
+        background-color: #A27E59;
+        transform: translateY(-3px);
     }
 </style>
 
-    <div class="card">
-        <h3>Aktivitas Penjualan Kue - Meryta Cookies</h3>
-        <div class="highlight">Rp {{ number_format($totalPenjualan ?? 0, 0, ',', '.') }}</div>
-        <p style="color:#795548;">Total pendapatan dari seluruh penjualan.</p>
+<div class="card">
+    <h3>Aktivitas Penjualan Kue - Meryta Cookies</h3>
+    <div class="highlight">Rp {{ number_format($totalPenjualan ?? 0, 0, ',', '.') }}</div>
+    <p style="color:#795548;">Total pendapatan dari seluruh penjualan.</p>
 
-        <div class="mini-cards">
-            <div class="mini-card">
-                <h4>Hari Ini</h4>
-                <p>Rp {{ number_format($totalHariIni ?? 0, 0, ',', '.') }}</p>
-            </div>
-            <div class="mini-card">
-                <h4>Minggu Ini</h4>
-                <p>Rp {{ number_format($totalMingguIni ?? 0, 0, ',', '.') }}</p>
-            </div>
-            <div class="mini-card">
-                <h4>Bulan Ini</h4>
-                <p>Rp {{ number_format($totalBulanIni ?? 0, 0, ',', '.') }}</p>
-            </div>
-            <div class="mini-card">
-                <h4>Total Produk Terjual</h4>
-                <p>{{ $totalProdukTerjual }}</p>
-            </div>
+    <div class="mini-cards">
+        <div class="mini-card">
+            <h4>Hari Ini</h4>
+            <p>Rp {{ number_format($totalHariIni ?? 0, 0, ',', '.') }}</p>
         </div>
-
-        <div class="chart-container">
-            <canvas id="chartPenjualan"></canvas>
+        <div class="mini-card">
+            <h4>Minggu Ini</h4>
+            <p>Rp {{ number_format($totalMingguIni ?? 0, 0, ',', '.') }}</p>
+        </div>
+        <div class="mini-card">
+            <h4>Bulan Ini</h4>
+            <p>Rp {{ number_format($totalBulanIni ?? 0, 0, ',', '.') }}</p>
+        </div>
+        <div class="mini-card">
+            <h4>Total Produk Terjual</h4>
+            <p>{{ $totalProdukTerjual }}</p>
         </div>
     </div>
 
+    <div class="btn-group-laporan">
+        <a href="{{ route('laporan.harian') }}" target="_blank" class="btn-laporan">Cetak Laporan Harian</a>
+        <a href="{{ route('laporan.mingguan') }}" target="_blank" class="btn-laporan">Cetak Laporan Mingguan</a>
+        <a href="{{ route('laporan.bulanan') }}" target="_blank" class="btn-laporan">Cetak Laporan Bulanan</a>
+    </div>
+
+    <div class="chart-container">
+        <canvas id="chartPenjualan"></canvas>
+    </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const ctx = document.getElementById('chartPenjualan');
-    const chart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: {!! json_encode($penjualanPerBulan->pluck('bulan') ?? []) !!},
-            datasets: [{
-                label: 'Penjualan per Bulan',
-                data: {!! json_encode($penjualanPerBulan->pluck('total') ?? []) !!},
-                borderColor: '#6d4c41',
-                backgroundColor: '#d7ccc8',
-                tension: 0.4,
-                fill: true
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
+const ctx = document.getElementById('chartPenjualan');
+const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: {!! json_encode($penjualanPerBulan->pluck('bulan') ?? []) !!},
+        datasets: [{
+            label: 'Penjualan per Bulan',
+            data: {!! json_encode($penjualanPerBulan->pluck('total') ?? []) !!},
+            borderColor: '#6d4c41',
+            backgroundColor: '#d7ccc8',
+            tension: 0.4,
+            fill: true
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
             }
         }
-    });
+    }
+});
 </script>
 @endsection

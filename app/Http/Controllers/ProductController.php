@@ -8,9 +8,21 @@ use App\Models\Kategori;
 
 class ProductController extends Controller
 {
-    public function index(){
-        $produk = Product::all();
-        return view('produk.index', compact('produk'));
+    public function index(Request $request){
+        $query = Product::with('kategori');
+
+        if($request->filled('kategori_id')){
+            $query->where('kategori_id', $request->kategori_id);
+        }
+
+        $produk =  $query->get();
+
+        if($request->ajax()){
+            return view('produk.table', compact('produk'))->render();
+        }
+
+        $kategori = Kategori::all();
+        return view('produk.index', compact('produk', 'kategori'));
     }
 
     public function create(){

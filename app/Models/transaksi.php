@@ -15,7 +15,11 @@ class transaksi extends Model
         'tanggal_pengiriman',
         'waktu_pengiriman',
         'total',
-        'status'
+        'status',
+        'metode_pembayaran',
+        'jumlah_pembayaran',
+        'kembalian',
+        'status_pembayaran'
     ];
 
     public function detail(){

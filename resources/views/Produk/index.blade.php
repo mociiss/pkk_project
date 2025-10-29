@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'CatatYuk - Daftar Produk')
+@section('title', 'CatatYuk - Data Transaksi')
 
 @section('content')
 <style>
@@ -78,50 +78,107 @@
     .btn-delete:hover {
         background: #c82333;
     }
+    .btn-primary {
+        background-color: #8C623B;
+        border: none;
+    }
+    .btn-primary:hover {
+        background-color: #A27E59;
+    }
+    .form-select {
+        border-radius: 8px;
+    }
+    .table {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .filter-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 16px 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 25px;
+        transition: 0.3s;
+        border-left: 6px solid #8C623B;
+    }
+
+    .filter-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .filter-header h5 {
+        margin: 0;
+        font-size: 16px;
+        color: #8C623B;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .filter-body {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .filter-select {
+        width: 250px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        padding: 8px 12px;
+        font-size: 18px;
+        transition: 0.3s;
+    }
+
+    .filter-select:focus {
+        border-color: #8C623B;
+        box-shadow: 0 0 5px rgba(140,98,59,0.3);
+    }
 </style>
 
 <div class="container">
-    <h1>Daftar Produk</h1>
-    <a href="{{ route('produk.create') }}" class="btn-add">+ Tambah Produk</a>
+    <h1>Data Produk</h1>
 
-    <table>
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Nama</th>
-                <th>Gambar</th>
-                <th>Harga</th>
-                <th>Deskripsi</th>
-                <th>Stok</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach ($produk as $index => $p)
-            <tr>
-                <td>{{ $index + 1 }}</td>
-                <td>{{ $p->nama_produk }}</td>
-                <td>
-                    @if ($p->gambar)
-                    <img src="{{ asset('images/' . $p->gambar) }}" alt="Gambar Barang" width="50">
-                    @endif
-                </td>
-                <td>Rp {{ number_format($p->harga, 0, ',', '.') }}</td>
-                <td>
-        {{ $p->kategori ? $p->kategori->nama_kategori : '-' }}
-    </td>
-                <td>{{ $p->stok }}</td>
-</ul>
-                <td>
-                    <a href="{{ route('produk.edit', $p) }}" class="btn-edit">Edit</a>
-                    <form action="{{ route('produk.destroy', $p) }}" method="POST" style="display:inline">
-                        @csrf @method('DELETE')
-                        <button type="submit" class="btn-delete" onclick="return confirm('Yakin hapus?')">Hapus</button>
-                    </form>
-                </td>
-            </tr>
-        @endforeach
-        </tbody>
-    </table>
+    <a href="{{ route('produk.create') }}" class="btn-add">+ Tambah Data Produk</a>
+
+    <div class="filter-card">
+        <div class="filter-header">
+        <h5>Status Transaksi</h5>
+        <select id="kategori_id" class="form-select filter-select">
+            <option value="">Semua</option>
+            @foreach($kategori as $k)
+                <option value="{{ $k->id }}">{{ $k->nama_kategori }}</option>
+            @endforeach
+        </select>
 </div>
+    </div>
+
+    <div id="table-container">
+        @include('produk.table', ['produk' => $produk])
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const kategoriFilter = document.getElementById('kategori_id');
+    const tableContainer = document.getElementById('table-container');
+
+    kategoriFilter.addEventListener('change', function() {
+        const kategori_id = this.value;
+        fetch(`{{ route('produk.index') }}?kategori_id=${kategori_id}`, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(response => response.text())
+        .then(html => {
+            tableContainer.innerHTML = html;
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
+</script>
 @endsection

@@ -17,20 +17,19 @@ use Illuminate\Support\Facades\DB;
 class TransaksiController extends Controller
 {
     public function index(Request $request){
-        $status = $request->get('status'); 
+        $query = Transaksi::with(['karyawan', 'pelanggan', 'detail.produk']);
 
-    if ($status) {
-        $transaksi = Transaksi::with(['detail.produk','karyawan','pelanggan'])
-            ->where('status', $status)
-            ->orderBy('created_at', 'desc')
-            ->get();
-    } else {
-        $transaksi = Transaksi::with(['detail.produk','karyawan','pelanggan'])
-            ->orderBy('created_at', 'desc')
-            ->get();
-    }
+        if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
+        }
 
-    return view('transaksi.index', compact('transaksi', 'status'));
+        $transaksi = $query->orderBy('tanggal', 'desc')->get();
+
+        if ($request->ajax()) {
+            return view('transaksi.table', compact('transaksi'))->render();
+        }
+
+        return view('transaksi.index', compact('transaksi'));
     }
 
     public function create(){
@@ -42,14 +41,27 @@ class TransaksiController extends Controller
 
 
     public function store(Request $request){
+        $request->validate([
+            'metode_pembayaran' => 'required'   
+        ]);
+
+        $karyawan = Karyawan::where('user_id', Auth::id())->first();
+
+        if(!$karyawan){
+            return back()->with('error', 'Data karyawan tidak ditemukan untuk pengguna ini.');
+        }
+
         $transaksi = Transaksi::create([
-            'karyawan_id' => $request->karyawan_id,
+            'karyawan_id' => $karyawan->id,
             'pelanggan_id' => $request->pelanggan_id,
             'tanggal' => now(),
             'tanggal_pengiriman' => $request->tanggal_pengiriman,
             'waktu_pengiriman' => $request->waktu_pengiriman,
             'total' => 0,
-            'status' => 'Belum Selesai'
+            'status' => 'Belum Selesai',
+            'metode_pembayaran' => $request->metode_pembayaran,
+            'jumlah_bayar' => $request->jumlah_bayar ?? 0,
+            'status_pembayaran' => $request->metode_pembayaran === 'Cash' ? 'Belum Dibayar' : 'Menunggu Konfirmasi',
         ]);
 
         $total = 0;
@@ -83,17 +95,38 @@ class TransaksiController extends Controller
 
         Notification::create([
             'transaksi_id' => $transaksi->id,
-            'title' => 'Pesanan ' . ($pelanggan->nama ?? 'Pelanggan tidak ada dalam data.'),
-            'message' => "• " . $produkItem . 
-            "\n• Total: Rp " . number_format($total, 0, ',', '.') . 
-            "\n• Pengantaran: " . 
-            \Carbon\Carbon::parse($request->tanggal_pengiriman)->translatedFormat('d F Y') . 
-            ', pukul ' . ($request->waktu_pengiriman ?? '-')
+            'title' => 'Pesanan ' . ($pelanggan->nama ?? 'Tanpa Nama'),
+            'message' => "• Total: Rp " . number_format($total, 0, ',', '.') .
+                    "\n• Pembayaran: " . $request->metode_pembayaran .
+                    ($request->metode_pembayaran == 'E-Wallet' ? ' (Scan saat antar)' : '') .
+                    "\n• Pengantaran: " .
+                    \Carbon\Carbon::parse($request->tanggal_pengiriman)->translatedFormat('d F Y') .
+                    ', pukul ' . ($request->waktu_pengiriman ?? '-')
+    ]);
 
-        ]);
+    $kembalian = 0;
+    if ($request->metode_pembayaran === 'Cash') {
+        $bayar = $request->jumlah_bayar ?? 0;
+        $kembalian = max($bayar - $total, 0);
+    }
+
+    $transaksi->update([
+        'total' => $total,
+        'kembalian' => $kembalian,
+    ]);
+
 
         return redirect()->route('transaksi.index')->with('Success', 'Data Transaksi Berhasil Dikirim!');
     }
+
+    public function konfirmasi($id)
+    {
+        $transaksi = Transaksi::findOrFail($id);
+        $transaksi->update(['status_pembayaran' => 'Lunas']);
+
+        return back()->with('success', 'Pembayaran E-Wallet telah dikonfirmasi.');
+    }
+
 
     public function selesai($id)
 {
